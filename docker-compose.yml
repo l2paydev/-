@@ -1,0 +1,19 @@
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_NAME: local-l2pay-api
+      DATABASE_HOST: 10.10.1.16
+      DATABASE_PORT: 5432
+      DATABASE_USER: l2pay
+      DATABASE_PASSWORD: l2pay
+      ALLOWED_HOSTS: 127.0.0.1,localhost,testnet.l2pay.ing,l2pay.ing,10.10.1.14
+      CSRF_TRUSTED_ORIGINS: https://testnet.l2pay.ing,https://l2pay.ing
+    ports:
+      - 8000:8000
+    command:
+      - make
+      - migrate
+      - runserver

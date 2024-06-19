@@ -1,0 +1,370 @@
+openapi: 3.0.3
+info:
+  title: API Docs - L2PAY
+  version: 1.0.0
+  description: API Docs - L2PAY
+paths:
+  /api/payments/:
+    get:
+      operationId: api_payments_list
+      description: List payments
+      summary: List payments
+      tags:
+      - api
+      security:
+      - Merchant: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payments'
+          description: ''
+    post:
+      operationId: api_payments_create
+      description: Create a payment
+      summary: Create a payment
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePayment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreatePayment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePayment'
+        required: true
+      security:
+      - Merchant: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievePayments'
+          description: ''
+  /api/payments/{id}/:
+    get:
+      operationId: api_payments_retrieve
+      description: Get a payment
+      summary: Get a payment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Payments.
+        required: true
+      tags:
+      - api
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievePayments'
+          description: ''
+components:
+  schemas:
+    CreatePayment:
+      type: object
+      properties:
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        currency:
+          $ref: '#/components/schemas/CurrencyEnum'
+        value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,8})?$
+        external_order_id:
+          type: string
+          maxLength: 100
+        external_order_title:
+          type: string
+          maxLength: 100
+        external_order_desc:
+          type: string
+          maxLength: 100
+        external_image_url:
+          type: string
+          maxLength: 200
+      required:
+      - external_order_id
+      - external_order_title
+      - value
+    CurrencyEnum:
+      enum:
+      - USDT
+      - USDC
+      - STRK
+      - BTC
+      - ETH
+      type: string
+      description: |-
+        * `USDT` - Usdt
+        * `USDC` - Usdc
+        * `STRK` - Strk
+        * `BTC` - Btc
+        * `ETH` - Eth
+    FeeAssetEnum:
+      enum:
+      - USDT
+      - USDC
+      - STRK
+      - BTC
+      - ETH
+      type: string
+      description: |-
+        * `USDT` - Usdt
+        * `USDC` - Usdc
+        * `STRK` - Strk
+        * `BTC` - Btc
+        * `ETH` - Eth
+    NetAssetEnum:
+      enum:
+      - USDT
+      - USDC
+      - STRK
+      - BTC
+      - ETH
+      type: string
+      description: |-
+        * `USDT` - Usdt
+        * `USDC` - Usdc
+        * `STRK` - Strk
+        * `BTC` - Btc
+        * `ETH` - Eth
+    NetworkEnum:
+      enum:
+      - Starknet
+      - zkSync
+      - XLAYER
+      - KakarotZkEVM
+      - Blast
+      type: string
+      description: |-
+        * `Starknet` - Starknet
+        * `zkSync` - Zksync
+        * `XLAYER` - Xlayer
+        * `KakarotZkEVM` - Kakarot
+        * `Blast` - Blast
+    PaidAssetEnum:
+      enum:
+      - USDT
+      - USDC
+      - STRK
+      - BTC
+      - ETH
+      type: string
+      description: |-
+        * `USDT` - Usdt
+        * `USDC` - Usdc
+        * `STRK` - Strk
+        * `BTC` - Btc
+        * `ETH` - Eth
+    Payments:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        expired_at:
+          type: string
+          format: date-time
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        currency:
+          $ref: '#/components/schemas/CurrencyEnum'
+        value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,8})?$
+        pay_wallet:
+          type: string
+          maxLength: 150
+        state:
+          $ref: '#/components/schemas/StateEnum'
+        external_order_id:
+          type: string
+          maxLength: 100
+        external_order_title:
+          type: string
+          maxLength: 100
+        external_order_desc:
+          type: string
+          nullable: true
+          maxLength: 100
+        external_image_url:
+          type: string
+          nullable: true
+          maxLength: 200
+        tx_hash:
+          type: string
+          nullable: true
+          maxLength: 200
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        paid_asset:
+          $ref: '#/components/schemas/PaidAssetEnum'
+        paid_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,10})?$
+          nullable: true
+        paid_usd_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,4})?$
+          nullable: true
+        fee_asset:
+          $ref: '#/components/schemas/FeeAssetEnum'
+        fee_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,10})?$
+          nullable: true
+        net_asset:
+          $ref: '#/components/schemas/NetAssetEnum'
+        net_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,10})?$
+          nullable: true
+        metadata:
+          nullable: true
+      required:
+      - created_at
+      - expired_at
+      - external_order_id
+      - external_order_title
+      - id
+      - pay_wallet
+      - updated_at
+      - value
+    RetrievePayments:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        pay_url:
+          type: string
+          maxLength: 200
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        expired_at:
+          type: string
+          format: date-time
+        network:
+          $ref: '#/components/schemas/NetworkEnum'
+        currency:
+          $ref: '#/components/schemas/CurrencyEnum'
+        value:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,11}(?:\.\d{0,8})?$
+        pay_wallet:
+          type: string
+          maxLength: 150
+        state:
+          $ref: '#/components/schemas/StateEnum'
+        external_order_id:
+          type: string
+          maxLength: 100
+        external_order_title:
+          type: string
+          maxLength: 100
+        external_order_desc:
+          type: string
+          nullable: true
+          maxLength: 100
+        external_image_url:
+          type: string
+          nullable: true
+          maxLength: 200
+        tx_hash:
+          type: string
+          nullable: true
+          maxLength: 200
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        paid_asset:
+          $ref: '#/components/schemas/PaidAssetEnum'
+        paid_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,10})?$
+          nullable: true
+        paid_usd_rate:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,4})?$
+          nullable: true
+        fee_asset:
+          $ref: '#/components/schemas/FeeAssetEnum'
+        fee_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,10})?$
+          nullable: true
+        net_asset:
+          $ref: '#/components/schemas/NetAssetEnum'
+        net_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,10})?$
+          nullable: true
+        metadata:
+          nullable: true
+      required:
+      - created_at
+      - expired_at
+      - external_order_id
+      - external_order_title
+      - id
+      - pay_wallet
+      - updated_at
+      - value
+    StateEnum:
+      enum:
+      - OPEN
+      - PROCESSING
+      - SUCCEED
+      - EXPIRED
+      type: string
+      description: |-
+        * `OPEN` - Open
+        * `PROCESSING` - Processing
+        * `SUCCEED` - Succeed
+        * `EXPIRED` - Expired
+  securitySchemes:
+    Merchant:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Put `Api-Key YOUR_API_KEY` into `Authorization` header

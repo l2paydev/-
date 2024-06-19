@@ -1,0 +1,15 @@
+django-allauth[mfa,saml,socialaccount]>=0.63.3
+django
+djangorestframework
+markdown
+django-filter
+snowflake-id
+django-jazzmin
+psycopg2-binary
+djangorestframework-api-key==3.*
+drf-spectacular
+starknet-py==0.22.0
+celery==5.4.0
+django-celery-beat==2.6.0
+redis==5.0.4
+pytz

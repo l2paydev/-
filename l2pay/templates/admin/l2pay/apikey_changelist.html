@@ -1,0 +1,15 @@
+<!-- templates/admin/myapp/mymodel_changelist.html -->
+
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+<div class="object-tools">
+    {% if has_add_permission %}
+    <ul class="action-buttons">
+        <li>
+            <a href="{% url 'admin:add_apikey' %}" class="button">ADD</a>
+        </li>
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}
