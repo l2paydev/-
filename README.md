@@ -58,8 +58,8 @@ Response
 ### Merchant API Key
 ![alt text](screenshots/merchant-apikey.png)
 
-### Dashboard
-![alt text](screenshots/image.png)
+### List payments
+![alt text](screenshots/payments.png)
 
 ### Payment detail
 ![alt text](screenshots/detail-payment.png)
